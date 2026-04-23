@@ -60,7 +60,7 @@ class HiloCliente extends Thread {
                         Servidor.mejorOferta = oferta;
                         Servidor.mejorPostor = nombre;
 
-                        Servidor.broadcast("Nueva mejor oferta: " + oferta + " por " + nombre);
+                        Servidor.broadcast("Nueva mejor oferta: " + oferta + " de " + nombre + " por " + Servidor.objeto);
                     } else {
                         enviar("Tu oferta es menor a la actual (" + Servidor.mejorOferta + ")");
                     }

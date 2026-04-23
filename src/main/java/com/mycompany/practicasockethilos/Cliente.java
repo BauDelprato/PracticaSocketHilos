@@ -1,4 +1,3 @@
-
 package com.mycompany.practicasockethilos;
 
 import java.io.*;
@@ -16,7 +15,12 @@ public class Cliente {
 
         BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 
+        System.out.print("Ingrese su nombre: ");
+        String nombre = teclado.readLine();
+
+        out.writeUTF(nombre);
         
+        //hilo secundario que escucha constantemente mensajes del servidor
         new Thread(() -> {
             try {
                 while (true) {
@@ -27,7 +31,7 @@ public class Cliente {
             }
         }).start();
 
-        
+        //while para que el cliente escriba x teclado
         while (true) {
             String msg = teclado.readLine();
             out.writeUTF(msg);

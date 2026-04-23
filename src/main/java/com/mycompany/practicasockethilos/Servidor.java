@@ -1,6 +1,7 @@
 
 package com.mycompany.practicasockethilos;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -13,17 +14,20 @@ public class Servidor {
 
     static double mejorOferta = 0;
     static String mejorPostor = "Nadie";
-    static String objeto = "objetoo";
+    static String objeto = "obra de arte";
 
     public static void main(String[] args) throws IOException {
 
         ServerSocket servidor = new ServerSocket(5000);
         System.out.println("Servidor iniciado");
-
+        
+        //while para recibir clientes y crear un hilo
         while (true) {
             Socket sc = servidor.accept();
-
-            String nombre = "Cliente " + contadorClientes++;
+            
+            DataInputStream in = new DataInputStream(sc.getInputStream());
+            String nombre = in.readUTF();
+            
             HiloCliente hilo = new HiloCliente(sc, nombre);
 
             clientes.add(hilo);
