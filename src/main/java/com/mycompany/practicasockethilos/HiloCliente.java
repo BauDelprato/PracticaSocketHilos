@@ -82,7 +82,8 @@ class HiloCliente extends Thread {
             enviar("Error procesando comando");
         }
     }
-
+    
+    //habla solo con el cliente del hilo
     public void enviar(String msg) {
         try {
             out.writeUTF(msg);

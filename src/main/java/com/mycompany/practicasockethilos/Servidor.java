@@ -9,7 +9,7 @@ import java.util.*;
 public class Servidor {
 
     static List<HiloCliente> clientes = new ArrayList<>();
-    static int contadorClientes = 1;
+    //static int contadorClientes = 1;
 
 
     static double mejorOferta = 0;
