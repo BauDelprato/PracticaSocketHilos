@@ -2,7 +2,6 @@ package com.mycompany.practicasockethilos;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 class HiloCliente extends Thread {
 
@@ -22,12 +21,14 @@ class HiloCliente extends Thread {
     public void run() {
         try {
             enviar("Bienvenido " + nombre);
-            if (Servidor.objeto.equals("")) {
+
+            if (Servidor.operador.getObjeto().equals("")) {
                 enviar("NO hay un objeto en subasta, podes subastar algo!!!");
             } else {
-                enviar("Objeto esubastandose: " + Servidor.objeto);
+                enviar("Objeto subastandose: " + Servidor.operador.getObjeto());
             }
-            enviar("Comandos: MENSAJE texto | OFERTAR monto | LISTAR | SUBASTAR | SALIR");
+
+            
 
             while (activo) {
                 String mensaje = in.readUTF();
@@ -57,29 +58,8 @@ class HiloCliente extends Thread {
 
             } else if (msg.startsWith("OFERTAR")) {
 
-                if (Servidor.objeto.equals("")) {
-                    enviar("No hay ninguna subasta activa :(");
-                    return;
-                } else {
-
-                    double oferta = Double.parseDouble(msg.split(" ")[1]);
-
-                    synchronized (Servidor.class) {
-                        if (oferta > Servidor.mejorOferta) {
-
-                            Servidor.reiniciarTimer(); //reinicia el countdown
-
-                            Servidor.mejorOferta = oferta;
-                            Servidor.mejorPostor = nombre;
-
-                            Servidor.broadcast("Nueva mejor oferta: " + oferta + " de " + nombre + " por " + Servidor.objeto);
-                            //tomar tiempo 10s
-                        } else {
-                            enviar("Tu oferta es menor a la actual (" + Servidor.mejorOferta + ")");
-                        }
-                    }
-
-                }
+                double oferta = Double.parseDouble(msg.split(" ")[1]);
+                Servidor.operador.ofertar(nombre, oferta);
 
             } else if (msg.equals("LISTAR")) {
 
@@ -90,18 +70,18 @@ class HiloCliente extends Thread {
                 enviar(lista);
 
             } else if (msg.equals("SUBASTAR")) {
-                if (Servidor.objeto.equals("")) {
+
+                if (Servidor.operador.getObjeto().equals("")) {
 
                     enviar("Ingrese el objeto a subastar");
                     String objetoSubastado = in.readUTF();
-                    Servidor.objeto = objetoSubastado;
-                    enviar(nombre + " está subastando: " + Servidor.objeto);
+
+                    Servidor.operador.iniciarSubasta(objetoSubastado, nombre);
 
                 } else {
-
-                    enviar("No se puede subastar tu objeto, actualmente se está subastando: " + Servidor.objeto);
-
+                    enviar("Ya hay una subasta activa: " + Servidor.operador.getObjeto());
                 }
+
             } else {
                 enviar("Comando no reconocido");
             }
@@ -111,7 +91,6 @@ class HiloCliente extends Thread {
         }
     }
 
-    //habla solo con el cliente del hilo
     public void enviar(String msg) {
         try {
             out.writeUTF(msg);
@@ -133,5 +112,4 @@ class HiloCliente extends Thread {
             e.printStackTrace();
         }
     }
-
 }
