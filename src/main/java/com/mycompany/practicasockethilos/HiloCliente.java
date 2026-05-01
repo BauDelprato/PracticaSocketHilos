@@ -20,8 +20,9 @@ class HiloCliente extends Thread {
 
     public void run() {
         try {
+            enviar(""); //NO ELIMINAR ESTE ENVIAR (se rompe el primer cliente uwu)
             enviar("Bienvenido " + nombre);
-
+            
             if (Servidor.operador.getObjeto().equals("")) {
                 enviar("NO hay un objeto en subasta, podes subastar algo!!!");
             } else {
